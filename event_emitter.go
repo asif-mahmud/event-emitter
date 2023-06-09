@@ -78,7 +78,7 @@ type removedListener struct {
 	Id    int
 }
 
-type IncomingEvent struct {
+type incomingEvent struct {
 	Topic   string
 	Payload interface{}
 }
@@ -90,7 +90,7 @@ type Emitter struct {
 	newListener     chan newListener
 	removedListener chan removedListener
 	stopManaging    chan bool
-	incomingEvent   chan IncomingEvent
+	incomingEvent   chan incomingEvent
 	removedEvent    chan string
 }
 
@@ -101,7 +101,7 @@ func NewEmitter() *Emitter {
 		newListener:     make(chan newListener, 1),
 		removedListener: make(chan removedListener, 1),
 		stopManaging:    make(chan bool, 1),
-		incomingEvent:   make(chan IncomingEvent),
+		incomingEvent:   make(chan incomingEvent),
 		removedEvent:    make(chan string),
 	}
 	emitter.waitGroup.Add(1)
@@ -231,7 +231,7 @@ func (emitter *Emitter) On(topic string, listener Listener) int {
 }
 
 func (emitter *Emitter) Emit(topic string, payload interface{}) {
-	emitter.incomingEvent <- IncomingEvent{Topic: topic, Payload: payload}
+	emitter.incomingEvent <- incomingEvent{Topic: topic, Payload: payload}
 }
 
 func (emitter *Emitter) Topics() []string {
